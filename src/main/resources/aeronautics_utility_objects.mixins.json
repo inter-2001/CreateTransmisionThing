@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.enxv.aerouniversaljoint.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "KineticBlockEntityTickMixin",
+    "KineticEffectHandlerMixin"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
