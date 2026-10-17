@@ -30,10 +30,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -45,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
 
 public class UniversalJointBlockEntity extends KineticBlockEntity implements BlockEntitySubLevelActor,
-        DetachedKineticSafetyGuard, KineticVisualEffectAccess, MenuProvider, SubLevelLinkedEndpoint {
+        DetachedKineticSafetyGuard, KineticVisualEffectAccess, SubLevelLinkedEndpoint {
     private static final String TAG_LINKED_POS = "LinkedPos";
     private static final String TAG_LINKED_SUB_LEVEL = "LinkedSubLevel";
     private static final String TAG_TRANSMISSION_AXIS_ALIGNED = "TransmissionAxisAligned";
@@ -94,12 +91,8 @@ public class UniversalJointBlockEntity extends KineticBlockEntity implements Blo
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
     }
 
-    public JointVariant getVariant() {
-        return JointVariant.fromState(this.getBlockState());
-    }
-
     public JointVariant getLinkVariant() {
-        return this.linkedVariant != null ? this.linkedVariant : this.getVariant();
+        return this.linkedVariant != null ? this.linkedVariant : JointVariant.BRASS;
     }
 
     @Override
@@ -249,7 +242,7 @@ public class UniversalJointBlockEntity extends KineticBlockEntity implements Blo
 
     @Override
     public void sable$physicsTick(ServerSubLevel subLevel, RigidBodyHandle handle, double timeStep) {
-        if (!this.getLinkVariant().isElastic() || this.level == null || this.level.isClientSide) {
+        if (this.level == null || this.level.isClientSide) {
             return;
         }
 
@@ -1041,56 +1034,13 @@ public class UniversalJointBlockEntity extends KineticBlockEntity implements Blo
         return base.minmax(AABB.ofSize(Vec3.atCenterOf(this.linkedPos), 1.0D, 1.0D, 1.0D)).inflate(1.0D);
     }
 
-    @Override
-    public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        if (!isSpeedRatioFeatureEnabled()) {
-            return null;
-        }
-        return new UniversalJointMenu(containerId, inventory, this);
-    }
-
-    @Override
-    public Component getDisplayName() {
-        return Component.translatable(this.getBlockState().getBlock().getDescriptionId());
-    }
-
-    public float getSpeedRatio() {
-        return 1.0F;
-    }
-
-    public static boolean isSpeedRatioFeatureEnabled() {
-        return false;
-    }
-
-    public void setSpeedRatio(float ratio) {
-    }
-
-    public void applySyncedSpeedRatio(float ratio) {
-    }
-
-    public static float getMaxSpeedRatio() {
-        return 4.0F;
-    }
-
-    public static float getMinSpeedRatio() {
-        return -4.0F;
-    }
-
-    public static Component describeSpeedRatio(float ratio) {
-        if (Math.abs(ratio) < 0.001F) {
-            return Component.literal("0x");
-        }
-        return Component.literal(String.format("%.2fx", ratio));
-    }
-
     public enum LinkResult {
         SUCCESS("linked", true, true),
         ALREADY_LINKED("linked", true, false),
         TARGET_UNAVAILABLE("target_missing", true, false),
         WRONG_DIMENSION("wrong_dimension", false, false),
         TOO_FAR("too_far", false, false),
-        SELF("same_joint", false, false),
-        MISMATCHED_VARIANT("same_type", false, false);
+        SELF("same_joint", false, false);
 
         private final String keySuffix;
         private final boolean clearsSelection;

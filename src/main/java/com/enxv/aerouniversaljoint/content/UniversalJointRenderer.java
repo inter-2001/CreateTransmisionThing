@@ -81,10 +81,6 @@ public class UniversalJointRenderer extends KineticBlockEntityRenderer<Universal
     }
 
     private void renderRotatingHead(UniversalJointBlockEntity be, PoseStack ms, MultiBufferSource buffer, int light) {
-        if (be.getVariant() != JointVariant.BRASS) {
-            return;
-        }
-
         BlockState state = be.getBlockState();
         Direction facing = state.getValue(UniversalJointBlock.FACING);
         Direction.Axis axis = getRotationAxisOf(be);

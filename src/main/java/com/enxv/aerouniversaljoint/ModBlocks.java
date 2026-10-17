@@ -1,6 +1,5 @@
 package com.enxv.aerouniversaljoint;
 
-import com.enxv.aerouniversaljoint.content.JointVariant;
 import com.enxv.aerouniversaljoint.content.UniversalJointBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -20,7 +19,7 @@ public final class ModBlocks {
                     .strength(3.5f, 6.0f)
                     .sound(SoundType.METAL)
                     .requiresCorrectToolForDrops()
-                    .noOcclusion(), JointVariant.BRASS));
+                    .noOcclusion()));
 
     private ModBlocks() {
     }

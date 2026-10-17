@@ -31,19 +31,11 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class UniversalJointBlock extends DirectionalKineticBlock implements IBE<UniversalJointBlockEntity>, BlockSubLevelAssemblyListener, IWrenchable {
-    private static final VoxelShape[] ANDESITE_SHAPES = DirectionalConnectionShapes.makeShapes(0.0D, 10.0D, 0.0D, 6.25D, 0.25D, 1.25D);
-    private static final VoxelShape[] BRASS_SHAPES = DirectionalConnectionShapes.makeShapes(0.0D, 10.75D, 0.5D, 5.75D, 0.0D, 2.25D);
+    private static final VoxelShape[] SHAPES = DirectionalConnectionShapes.makeShapes(0.0D, 10.75D, 0.5D, 5.75D, 0.0D, 2.25D);
 
-    private final JointVariant variant;
-
-    public UniversalJointBlock(Properties properties, JointVariant variant) {
+    public UniversalJointBlock(Properties properties) {
         super(properties);
-        this.variant = variant;
         registerDefaultState(defaultBlockState().setValue(FACING, Direction.UP));
-    }
-
-    public JointVariant getVariant() {
-        return this.variant;
     }
 
     @Override
@@ -116,11 +108,6 @@ public class UniversalJointBlock extends DirectionalKineticBlock implements IBE<
             return InteractionResult.SUCCESS;
         }
 
-        if (!UniversalJointBlockEntity.isSpeedRatioFeatureEnabled()) {
-            return InteractionResult.SUCCESS;
-        }
-
-        player.openMenu(blockEntity, pos);
         return InteractionResult.SUCCESS;
     }
 
@@ -169,8 +156,7 @@ public class UniversalJointBlock extends DirectionalKineticBlock implements IBE<
     }
 
     private VoxelShape getFacingShape(BlockState state) {
-        VoxelShape[] shapes = this.variant == JointVariant.BRASS ? BRASS_SHAPES : ANDESITE_SHAPES;
-        return shapes[state.getValue(FACING).ordinal()];
+        return SHAPES[state.getValue(FACING).ordinal()];
     }
 
 }

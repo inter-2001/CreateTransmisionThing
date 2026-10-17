@@ -1,24 +1,13 @@
 package com.enxv.aerouniversaljoint.content;
 
 import com.enxv.aerouniversaljoint.AeroUniversalJointConfig;
-import com.enxv.aerouniversaljoint.ModBlocks;
-import net.minecraft.world.level.block.state.BlockState;
 
 public enum JointVariant {
-    ANDESITE(15.0D, 1.0D, 2.5D, true),
-    BRASS(5.0D, 4.0D, 5.5D, true);
+    ANDESITE,
+    BRASS;
 
-    private final double linkRange;
-    private final double stretchSoftRange;
-    private final double stretchDisconnectRange;
-    private final boolean elastic;
-
-    JointVariant(double linkRange, double stretchSoftRange, double stretchDisconnectRange, boolean elastic) {
-        this.linkRange = linkRange;
-        this.stretchSoftRange = stretchSoftRange;
-        this.stretchDisconnectRange = stretchDisconnectRange;
-        this.elastic = elastic;
-    }
+    /** Distance off rest length (blocks) at which an andesite link reaches full pull stiffness. */
+    private static final double ANDESITE_FULL_FORCE_OFFSET = 2.0D;
 
     public double getLinkRange() {
         return this == ANDESITE
@@ -39,11 +28,7 @@ public enum JointVariant {
     }
 
     public double getMaxForceRange() {
-        return this == ANDESITE ? 2.0D : this.getDisconnectRange();
-    }
-
-    public boolean isElastic() {
-        return elastic;
+        return this == ANDESITE ? ANDESITE_FULL_FORCE_OFFSET : this.getDisconnectRange();
     }
 
     public boolean isWithinLinkRange(double distanceSquared) {
@@ -67,9 +52,5 @@ public enum JointVariant {
             }
         }
         return null;
-    }
-
-    public static JointVariant fromState(BlockState state) {
-        return state.is(ModBlocks.BRASS_UNIVERSAL_JOINT.get()) ? BRASS : ANDESITE;
     }
 }

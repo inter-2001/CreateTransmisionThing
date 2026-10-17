@@ -86,14 +86,11 @@ The rod is used up when a link is made (not in creative), and dropped back when 
 ```
 AeroUniversalJointMod ............ entry point: registers everything, config, stress value
  |
- +-- ModBlocks / ModItems / ModBlockEntities / ModMenuTypes / ModCreativeTabs
+ +-- ModBlocks / ModItems / ModBlockEntities / ModCreativeTabs
  |
  +-- AeroUniversalJointConfig ..... common config file (stress_impact, ranges, stiffness)
  |
  +-- AeroUniversalJointCommonEvents  per-tick cleanup, clears selections on logout/respawn/dimension change
- |
- +-- network/
- |     AeroUniversalJointNetwork, SetJointSpeedRatioPayload   (speed ratio is disabled, see section 17)
  |
  +-- content/
  |     UniversalJointBlock .......... placement, right-click handling, wrench, assembly-move hooks
@@ -107,14 +104,13 @@ AeroUniversalJointMod ............ entry point: registers everything, config, st
  |     RecentMoveRemapper ........... old position -> new position lookup, kept 600 game ticks
  |     UniversalJointRenderer ....... draws the spinning head and the rod between heads
  |     LinkVisualEffects ............ strain colour (white -> red, or a green recovery flash)
- |     UniversalJointMenu, WrenchRemovalHelper, DirectionalConnectionShapes
+ |     WrenchRemovalHelper, DirectionalConnectionShapes
  |     ponder/ ...................... the in-game Ponder scene for joints
  |
  +-- client/
- |     AeroUniversalJointClient ..... registers renderer, screen, preview, Ponder
+ |     AeroUniversalJointClient ..... registers renderer, preview, Ponder
  |     ConnectionPreviewRenderer .... the coloured "where will this link go" preview
  |     AeroUniversalJointPartials ... the partial models (head, sleeve, cores)
- |     UniversalJointScreen ......... speed ratio screen (unreachable while the feature is off)
  |     ToolgunCompatibilityNotice ... login hint about the Aeronautics Toolgun mod
  |
  +-- mixin/ + access/ .............. two small Create hooks (section 16)
@@ -131,12 +127,11 @@ AeroUniversalJointMod ............ entry point: registers everything, config, st
      |
      v
  AeroUniversalJointMod(...)                         (mod constructor)
-     |-- register blocks, items, block entities, menus, creative tab
-     |-- register network payloads (protocol "3")
+     |-- register blocks, items, block entities, creative tab
      |-- register NeoForge event listeners (selections, move-remap cleanup)
      |-- registerConfig(COMMON)  ---> config/aeronautics_utility_objects-common.toml
      |                                (created with defaults if missing)
-     |-- on CLIENT only: renderer, screen, preview renderer, Ponder plugin
+     |-- on CLIENT only: renderer, preview renderer, Ponder plugin
      v
  FMLCommonSetupEvent
      |
@@ -334,7 +329,7 @@ sub-level's current orientation) and the two are compared:
 The result is stored (`TransmissionAxisAligned`) and **kept for the life of the link**. If a structure later
 turns upside down, the direction doesn't suddenly flip mid-flight. Re-link to recompute it.
 
-The speed ratio is always **1:1** (section 17).
+Rotation always crosses the link at **1:1**.
 
 ---
 
@@ -671,19 +666,17 @@ just the joint head.
 
 ## 17. Quirks and limitations
 
-- **Speed ratio is switched off.** `UniversalJointBlockEntity.isSpeedRatioFeatureEnabled()` returns `false`
-  and `getSpeedRatio()` always returns `1.0`. The screen, menu and network payload still exist but can't be
-  opened. Empty-hand right-click on a linked head therefore does nothing (sneak + empty hand still unlinks).
+- **1:1 only.** The original mod had a speed-ratio screen, but it was hard-wired off, so it was removed.
+  Empty-hand right-click on a linked head does nothing (sneak + empty hand still unlinks).
 - **Direction is fixed at link time** (section 7.3). Re-link if a structure has been flipped and you want the
   direction recomputed.
 - **No physics between two world blocks or within one sub-level** (section 9.1). In those cases the link still
   transmits rotation; it just doesn't apply forces.
-- **The andesite force curve's full-force point is hard-coded** at 2.0 blocks off rest (section 9.2), not
-  configurable.
+- **The andesite force curve's full-force point is fixed** at 2.0 blocks off rest (section 9.2), as the
+  constant `JointVariant.ANDESITE_FULL_FORCE_OFFSET`; it isn't in the config.
 - **Common config isn't synced to clients.** Goggles on a client show that client's `stress_impact`.
-- **Leftovers from the full mod:** `JointBindingData.Selection` still carries two unused hydraulic flags, the
-  `same_structure` message has no code path that shows it, and `LinkResult.MISMATCHED_VARIANT` is never
-  returned (a mismatched rod just clears the selection). None of these affect behaviour.
+- **A mismatched rod clears the selection.** Clicking the second head with the other kind of rod doesn't
+  link; it just clears your first click ("Link target cleared.").
 - **Relinking loses the old rod.** Linking a head that is already linked to a different head replaces the old
   link without dropping the old link's rod (section 13).
 - **Removed content:** worlds that contain the legacy head, pneumatic/hydraulic blocks or the kinetic

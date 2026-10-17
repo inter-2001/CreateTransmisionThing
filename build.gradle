@@ -4,7 +4,6 @@ buildscript {
             name = 'NeoForged'
             url = 'https://maven.neoforged.net/releases'
         }
-        mavenLocal()
     }
     dependencies {
         classpath 'net.neoforged:moddev-gradle:2.0.141'
@@ -38,19 +37,20 @@ sourceSets.main.resources {
 
 repositories {
     maven {
+        // Sable, Sable Companion, Simulated
         name = 'Sable Releases'
         url = 'https://maven.ryanhcode.dev/releases'
     }
     maven {
-        name = 'Local Maven Metadata'
-        url = uri(new File(System.getProperty('user.home'), '.m2/repository'))
-        metadataSources {
-            gradleMetadata()
-            mavenPom()
-            artifact()
-        }
+        // Create, Ponder (includes Catnip), Flywheel
+        name = 'Create'
+        url = 'https://maven.createmod.net'
     }
-    mavenLocal()
+    maven {
+        // Registrate (needed to compile against Create's block entries)
+        name = 'Registrate'
+        url = 'https://maven.ithundxr.dev/snapshots'
+    }
 }
 
 neoForge {
@@ -102,20 +102,22 @@ configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
 
+// Every dependency is compile-time only (players install them as separate mods) and is also put on the
+// dev-run classpath via localRuntime. transitive=false keeps each mod from pulling in its own copies of others.
+def externalMods = [
+        "com.simibubi.create:create-${minecraft_version}:${create_version}:slim",
+        "net.createmod.ponder:ponder-neoforge:${ponder_version}+mc${minecraft_version}",
+        "dev.engine-room.flywheel:flywheel-neoforge-${minecraft_version}:${flywheel_version}",
+        "com.tterrag.registrate:Registrate:${registrate_version}",
+        "dev.ryanhcode.sable:sable-neoforge-${minecraft_version}:${sable_api_version}",
+        "dev.ryanhcode.sable-companion:sable-companion-common-${minecraft_version}:${sable_companion_version}",
+        "dev.simulated_team.simulated:simulated-neoforge-${minecraft_version}:${simulated_api_version}",
+]
+
 dependencies {
-    compileOnly fileTree(dir: 'libs', include: ['*.jar'], exclude: ['sable-neoforge-*.jar'])
-    compileOnly("dev.ryanhcode.sable:sable-neoforge-${minecraft_version}:${sable_api_version}") {
-        transitive = false
-    }
-    compileOnly("dev.simulated_team.simulated:simulated-neoforge-${minecraft_version}:${simulated_api_version}") {
-        transitive = false
-    }
-    localRuntime fileTree(dir: 'libs', include: ['*.jar'], exclude: ['sable-neoforge-*.jar', 'create-aeronautics-bundled-*.jar'])
-    localRuntime("dev.ryanhcode.sable:sable-neoforge-${minecraft_version}:${sable_api_version}") {
-        transitive = false
-    }
-    localRuntime("dev.simulated_team.simulated:simulated-neoforge-${minecraft_version}:${simulated_api_version}") {
-        transitive = false
+    externalMods.each { coordinate ->
+        compileOnly(coordinate) { transitive = false }
+        localRuntime(coordinate) { transitive = false }
     }
 }
 

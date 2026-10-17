@@ -9,16 +9,7 @@ public final class JointBindingData {
     private JointBindingData() {
     }
 
-    public record Selection(ResourceLocation dimensionId, BlockPos pos, @Nullable UUID subLevelId,
-                            boolean creativeHydraulic, boolean giantHydraulic) {
-        public Selection(ResourceLocation dimensionId, BlockPos pos, @Nullable UUID subLevelId) {
-            this(dimensionId, pos, subLevelId, false, false);
-        }
-
-        public Selection(ResourceLocation dimensionId, BlockPos pos, @Nullable UUID subLevelId,
-                         boolean creativeHydraulic) {
-            this(dimensionId, pos, subLevelId, creativeHydraulic, false);
-        }
+    /** A joint head location: dimension, block position, and the sub-level it sits in (null for the world). */
+    public record Selection(ResourceLocation dimensionId, BlockPos pos, @Nullable UUID subLevelId) {
     }
 }
-

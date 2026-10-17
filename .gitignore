@@ -13,8 +13,6 @@ crash-reports/
 
 # Generated mod artifacts
 *.jar
-!libs/*.jar
-!compile_deps/*.jar
 !gradle/wrapper/gradle-wrapper.jar
 
 # Large local scratch archives / dependency dumps

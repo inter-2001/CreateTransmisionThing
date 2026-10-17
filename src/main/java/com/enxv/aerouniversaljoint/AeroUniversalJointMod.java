@@ -1,7 +1,6 @@
 package com.enxv.aerouniversaljoint;
 
 import com.enxv.aerouniversaljoint.client.AeroUniversalJointClient;
-import com.enxv.aerouniversaljoint.network.AeroUniversalJointNetwork;
 import com.simibubi.create.api.stress.BlockStressValues;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -19,9 +18,7 @@ public final class AeroUniversalJointMod {
         ModBlocks.register(modBus);
         ModItems.register(modBus);
         ModBlockEntities.register(modBus);
-        ModMenuTypes.register(modBus);
         ModCreativeTabs.register(modBus);
-        AeroUniversalJointNetwork.register(modBus);
         AeroUniversalJointCommonEvents.register();
 
         // Common config: a real file at config/aeronautics_utility_objects-common.toml, shared by every world.
