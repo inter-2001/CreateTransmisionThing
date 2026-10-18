@@ -1,4 +1,4 @@
-# How Transmission & Linkage Works
+# How Create: Transmission and Autism Works
 
 An in-depth walkthrough of the trimmed mod: what each piece does, how a link is made, how rotation and stress
 cross it, how the physics holds two structures together, and what happens when structures move or break.
@@ -111,7 +111,6 @@ AeroUniversalJointMod ............ entry point: registers everything, config, st
  |     AeroUniversalJointClient ..... registers renderer, preview, Ponder
  |     ConnectionPreviewRenderer .... the coloured "where will this link go" preview
  |     AeroUniversalJointPartials ... the partial models (head, sleeve, cores)
- |     ToolgunCompatibilityNotice ... login hint about the Aeronautics Toolgun mod
  |
  +-- mixin/ + access/ .............. two small Create hooks (section 16)
  |

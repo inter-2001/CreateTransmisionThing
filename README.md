@@ -1,4 +1,4 @@
-# Create Aeronautics: Transmission & Linkage
+# Create: Transmission and Autism
 
 Adds universal joints for linking Aeronautics structures and passing rotation across the link.
 

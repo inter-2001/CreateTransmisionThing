@@ -17,7 +17,6 @@ public final class AeroUniversalJointClient {
         AeroUniversalJointPartials.init();
         modBus.addListener(AeroUniversalJointClient::registerRenderers);
         NeoForge.EVENT_BUS.addListener(ConnectionPreviewRenderer::render);
-        ToolgunCompatibilityNotice.init();
     }
 
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {

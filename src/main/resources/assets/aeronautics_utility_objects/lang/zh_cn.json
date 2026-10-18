@@ -17,8 +17,6 @@
   "message.aeronautics_utility_objects.wrong_dimension": "两端必须在同一维度。",
   "message.aeronautics_utility_objects.too_far": "距离过远，无法连接。",
   "message.aeronautics_utility_objects.same_joint": "不能连接自己。",
-  "message.aeronautics_utility_objects.toolgun_outdated": "检测到旧版 Create Aeronautics: Toolgun（%s），请更新到 %s 或更新版本，以支持 Create Aeronautics: Transmission & Linkage 的万向节、气压等蓝图保存。",
-  "message.aeronautics_utility_objects.toolgun_missing": "推荐安装 Create Aeronautics: Toolgun %s 或更新版本，以支持 Create Aeronautics: Transmission & Linkage 的万向节、气压等蓝图保存。",
   "tooltip.aeronautics_utility_objects.clear_hint": "潜行右键可清除当前目标。",
   "tooltip.aeronautics_utility_objects.head_hint": "用于连接并传递结构运动。",
   "tooltip.aeronautics_utility_objects.head_rod_hint": "拿不同万向节杆点头，即可切换黄铜或安山连接。",
